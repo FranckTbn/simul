@@ -1,0 +1,1277 @@
+---
+title: "SIMULATION DE MONTE CARLO"
+author: "TRA BI"
+
+date: last-modified
+
+format: 
+  html:
+    number-sections: false
+    toc: true
+    toc-depth: 2
+    smooth-scroll: true
+    code-fold: true 
+    code-tools: true
+    highlight-style: github
+    
+fig-align: "center"
+
+theme:
+    light: flatly
+    dark: darkly
+
+execute:
+  debug: true
+  warning: false
+
+css: style.css
+editor: visual
+---
+
+```{=html}
+<nav class="navbar bg-body-tertiary">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="isfa.jpg" alt="Bootstrap" width="520" height="200">
+    </a>
+  </div>
+</nav>
+```
+```{=html}
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="OIP.jpg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="a.jpg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="b.jpg" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+```
+
+```{r}
+#| label: télechargement de package
+
+#| echo: false
+
+# Libraries
+library(ggplot2)
+library(dplyr)
+library(ggplot2)
+library(Rcpp)
+library(rbenchmark)
+library(gapminder)
+library(av)
+library(gifski)
+```
+
+::: {.grid}
+
+::: {.g-col-8}
+
+```{=html}
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">TRA</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       
+       <div class="card mb-3">
+  <img src="car.jpg" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+    <a href="https://www.chess.com/member/frejkl" class="btn btn-primary stretched-link">Go somewhere</a>
+  </div>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-target="#exampleModalToggle1" data-bs-toggle="modal">Open second modal</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModalToggle1" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">FIFI</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="card mb-3">
+  <img src="car.jpg" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+    <a href="https://www.chess.com/member/frejkl" class="btn btn-primary stretched-link">Go somewhere</a>
+  </div>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Open second modal</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Pachell</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="card mb-3">
+  <img src="car.jpg" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+    <a href="https://www.chess.com/member/frejkl" class="btn btn-primary stretched-link">Go somewhere</a>
+  </div>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-target="#exampleModalToggle3" data-bs-toggle="modal">Open second modal</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModalToggle3" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">METOU</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="card mb-3">
+  <img src="car.jpg" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+    <a href="https://www.chess.com/member/frejkl" class="btn btn-primary stretched-link">Go somewhere</a>
+  </div>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to first</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"> èquipe </button>
+```
+:::
+
+:::
+
+
+
+```{r}
+#| echo: false
+x0 <- 3 # représente moyenne des intensités
+eta <- 2.5
+m <- 1.5
+n.simul <- 10^3 # nombre de simulation de H_max nécessaire pour estimer la probabilité de pénurie
+λ0 = 170 #lamoyenne de pluie par an
+α = 0.5
+v = 15
+h0 = 63
+
+
+params_def = list("x0" = x0, "m" = m, "eta" = eta)
+params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+p = params
+```
+
+## Introduction
+
+> **Explanation**: in a quarto doc, the `:::` operator adds a html `div`. Then, writing `.panel-tabset .nav-pills` adds 2 classes to the `div`. Quarto relies on a framework called [bootstrap](https://getbootstrap.com/). Bootstrap knows thoses classes and transform their children in tabs automatically for us!
+
+Here is the link to the [section 2](#section-2) of the document!
+
+<div>
+
+On considère le fleuve Coulantine traversant la ville d'Aussec. On souhaite savoir quelle est la probabilité que ce fleuve déborde et inonde la ville au cours de l'année 2024, selon qu'on construise ou non des murets autour de son lit. On modélise les pluies par un ensemble de dates, et des intensités pour chacune de ces dates. On considère ces pluies instantanées.
+
+</div>
+
+Notre modèle nous permetra de calculer la hauteur d'eau dans le fleuve à tout moment de l'année, et d'approximer, par la méthode de *Monte Carlo*, la probabilité que $H_{max}$ la hauteur maximale de l'eau dans le fleuve dépasse le seuil $h_0$ (donné) correspondant à l'inondation de la ville.
+
+Le présent rapport, récapitule la suite de fonctions et de techniques de programmation qui nous a permis d'estimer précisément $P_0$
+
+## Oganisation
+
+-   Metushela : expert en chatGpt
+-   La reine mère
+-   Pachelle l'intello
+-   Tra Bi : chargé des
+
+## Simulation des intensités
+
+La variable aléatoire $(I_n)$, l'intensité de la $n\text{-ième}$ pluie, suit la loi de $\mathbb{P}_I$ de densité $f_I$
+
+$$f_I(x)=\mathbb{1}_{\mathbb{R}_{+}}(x)\frac{C_I}{m + \lvert x-x_0 \rvert^\lambda}$$
+
+Les variables aléatoires $(I_n)_{n\ge0}$ sont indépendantes identiquement distribuées (*iid*) et sont toutes d'une densité proportionelle à $f(x)=\frac{1}{m + \lvert x-x_0 \rvert^\lambda}$
+
+```{r}
+#| echo: true
+#| code:-line-numbers: 4|5|6
+f <- function(x, p = params_def) {
+  return(1/(p$m + abs(x - p$x0)^p$eta)) 
+  }
+```
+
+cherchons une fonction de densité $g$ telle que $\frac{f(x)}{g(x)}\le c$ dont on connait la densité
+
+::: callout-tip
+#### remarque 🤓
+
+$f$ ressemble à la densité de $Cauchy \quad \mathscr{C}(x_0,m)$ $$g(x)= \frac{m}{\pi}\frac{1}{m^2+(x-x_0)^2}$$
+:::
+
+```{r}
+#| echo: true
+g <- function(x, p = params_def) {
+  return(m/(pi*(p$m^2 + abs(x - p$x0)^2)))
+  }
+```
+
+visualisons l'allure de la courbe de la fonction $f$
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+
+See in Full Screen
+
+</button>
+
+::: {#exampleModal .modal .fade tabindex="-1"}
+::: {.modal-dialog .modal-dialog-centered .p-8 style="max-width: 90%"}
+::: modal-content
+```{r}
+#| echo: true
+p = list("x0" = x0, "m" = m, "eta" = eta)
+x = seq(from = 0, to = 4*p$x0, by = 0.001)
+
+data <- data.frame(a = x, b = f(x) )
+
+ggplot(data, aes(x=a, y=b, color =  'blue')) +
+  geom_line() +
+  theme(
+    legend.position="none",
+    plot.title = element_text(size=14)) +
+    ggtitle("la densité des intensités") +
+  xlab("c")+
+  ylab("f")
+```
+:::
+:::
+:::
+
+::: callout-tip
+#### remarque 😲
+
+la courbe de $f$ a la forme d'une cloche, ce qui nous fait penser à la loi normal
+:::
+
+```{r}
+#| echo: true
+f_sur_g <- function(x, p = params_def) {
+  return((pi*(x - x0)^2)/(m^2 + m*abs(x - x0)^eta)) 
+  }
+```
+
+visualisation
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+#| echo: true
+x = seq(from = 0, to = 4*p$x0, by = 0.001)
+
+plot(x, f(x), type = 'l', col= 'blue', main = "f")
+lines(x, (p$eta + 0.8)*dcauchy(x, location = p$x0, scale= p$m ) , col = 'red', main = "cauchy")
+lines(x, (p$eta+0.7 )*dnorm(x, mean = p$x0, sd = p$m^1.5 ), col = 'green', main= "exp")
+legend("topright", legend=c("normale", "cauchy", "f"), col=c("green", "red", 'blue'), lty=c(1, 1))
+
+data <- data.frame(a = x, 
+                   b = f(x), 
+                   c = (p$eta + 0.8)*dcauchy(x, location = p$x0, scale= p$m ),
+                   d = (p$eta+0.7 )*dnorm(x, mean = p$x0, sd = p$m^1.5 ))
+                   
+
+
+ggplot(data) +
+  geom_line(aes(x=a, y=b, color = 'blue')) +
+  geom_line(aes(x=a, y=c, color = 'red')) +
+  geom_line(aes(x=a, y=d, color = 'green'))
+  theme(
+    legend.position="none",
+    plot.title = element_text(size=14)) +
+    ggtitle("la densité des intensités") +
+  xlab("x")+
+  ylab("densité")
+
+
+```
+
+la fonction `rintensite` doit renvoyer un vecteur de taille n contenant les valeurs simulées suivant la loi $\mathbb{P}_i$
+
+Simulons $\mathbb{P}_i$ avec la methode de rejet en utilisant la loi *Normal* et *Cauchy* afin de choisir l'algorithme le plus éficace
+
+-   Pour tester la validité de notre technique de simulation, on représente l'histogramme des réalisations obtenues par simulation surplantée de la courbe de la densité $f$
+
+::: {.panel-tabset .nav-pills}
+#### Cauchy
+
+```{r}
+#| echo: true
+rintensite_Cauchy <- function(n, p = params_def){
+   x <- numeric(n)
+   afaire <- rep(TRUE, n)
+   while(any(afaire)) {
+     a <- sum(afaire)
+     x[afaire] <- rcauchy(a, p$x0, p$m )
+     u <- runif(a, min=0, max=10)
+     afaire[afaire] <- f(x[afaire]) < u*(p$eta + 0.8)*dcauchy(x[afaire], location = p$x0, scale= p$m )
+   }
+   x
+}
+```
+
+```{r}
+#| echo: true
+n<- 10^6
+
+X = rintensite_Cauchy(n)
+X = X[0 < X & X < 4*p$x0]
+x = seq(from = 0, to = 4*p$x0, by = 0.1)
+
+hist(X, freq=FALSE, breaks = x, main="Intensite cauchy")
+lines(x, 0.53*f(x), col="red", lwd=2)
+
+
+```
+
+#### Normal
+
+```{r}
+#| echo: true
+rintensite_Normal <- function(n, p = params_def){
+   X <- numeric(n)
+   afaire <- rep(TRUE, n)
+   c <- p$eta + 1
+   while(any(afaire)) {
+     X[afaire] <- rnorm(sum(afaire), p$x0, p$m^1.5 )
+     Y <- runif(sum(afaire), min=0, max=c)
+     afaire[afaire] <- f(X[afaire]) < Y*dnorm(X[afaire], p$x0, p$m^1.5 )
+   }
+   X
+}
+
+```
+
+```{r}
+#| echo: true
+#| label: fig-bill-sizes
+#| fig-cap: "Bill Sizes by species"
+n<- 10^6
+x = seq(from = 0, to = 4*p$x0, by = 0.1)
+X = rintensite_Normal(n); X = X[0 < X & X < 4*p$x0]
+hist(X, freq=FALSE, breaks=x, main="Intensite normale")
+lines(x, 0.53*f(x), col="green", lwd=2)
+
+```
+:::
+
+Avec une bonne valeur de $C_I$, on observe une concordance entre la courbe de la densité $f$ et les histogrammes obtenues. Cela nous rassure quant à la validité de notre technique de simulation.
+
+durées de simulation de chaque méthode
+
+```{r}
+#| echo: true
+benchmark(rintensite_Normal(10^3), rintensite_Cauchy(10^3))[,c(1,3,4)]
+
+```
+
+la simulation de la loi $\mathbb{P}_i$ à partir de la loi normal est la plus éfficace.
+
+Dans la suite `rintensite_Normal` sera `rintensite`
+
+```{r}
+#| echo: true
+rintensite = rintensite_Normal
+```
+
+## Silmulaltion de p\*
+
+```{r}
+#| echo: false
+params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+```
+
+On modélise les dates des pluies par un processus de Poisson inhomogène, de fonction intensité $\lambda$. $$\lambda(t)=\lambda_0(1+\alpha\sin(4\pi t))$$
+
+```{r}
+#| echo: true
+intens <- function(t, p = params){
+  return(p$lambda0*(1 + p$alpha*sin(4*pi*t)))
+  
+}
+```
+
+```{r}
+intens(seq(0.1, 0.9, 0.1))
+```
+
+$$\lambda_0(1+\alpha\sin(4\pi t)) 
+\le 2\lambda_0 \quad \text{car } \begin{cases}  0 \le sin(4\pi t) \le 1 \\0 \le \alpha \le 1
+\end{cases}  $$
+
+Soit $2\lambda_0$ un majorant de la fonction $λ$
+
+### simulation des dates
+
+on sait que :
+
+-   $2\lambda_0$ est un majorant de la fonction $\lambda$.
+
+-   le temps $t$ est le temps en années, avec $t = 0$ au début de l'année 2024 et $t = 1$ à la fin de l'année 2024.
+
+étapes de la simulation:
+
+-   Donc $homo$ un processus de Poisson homogène d'intensité $2\lambda_0$.
+
+-   $(U_i)_i$ des variables aléatoires indépendantes et indépendantes de $(homo_i)_i$, de loi $U([0, 1])$.
+
+-   le vecteur d'elément croissant obtenu en triant les élémants du processus homogène $homoh$ qui vérifie $2λ_0∗U_i \le λ(homoi)$ est un processus de Poisson inhomogène d'intensité λ.
+
+```{r}
+#| echo: true
+Dates <- function(t = 1, p = params){
+  N <- rpois(1, lambda = 2*p$lambda0*t)
+  homo <- runif(N, min = 0, max= 1)
+  U <- runif(N, min = 0, max = 1)
+  inhomo <- sort(homo[2*p$lambda0*U <= intens(homo)])
+  return(inhomo)
+}
+
+```
+
+```{r}
+length(Dates())
+```
+
+Les zones avec la pente plus élévée désignent les période où il pleut moins
+
+```{r}
+#| echo: true
+a <- Dates()
+
+barplot(a, col = rainbow(10))
+
+```
+
+### l'évolution de la hauteur de l'eau du fleuve
+
+r est la fonction de résorption de l'eau de ce fleuve $$r(t)=\mathbb{1}_{\mathbb{R}_{+}}(t)\exp(-vt)$$
+
+```{r}
+#| echo: true
+r <- function(t){(t > 0)*exp(-v*t)}
+```
+
+La hauteur d'eau $H(t)$ dans le fleuve Coulantine au temps t
+
+$$H(t)=\displaystyle\sum_{i\ge1}^{}I_i\times\ r(t-T_i)$$ les intensités suplémentaires qui n'ont pas de correspondance en dates ne concerne pas les pluie de l'année 2024.
+
+nous n'en tiendront pas compte.
+
+loi de poissson \[0, 0.5\] considère uniquement les pluies avant 0.5
+
+```{r}
+#| echo: true
+Hauteur1 <- function(t, p = params){
+  Ti <- Dates(t)
+  H <- sum(rintensite_Normal(length(Ti))*r(t - Ti))
+  return(H)
+}
+
+```
+
+pourquoi pour chaque t, on referai la simulation ? on pourait fixer les dates de pluies à l'avance, biensur par la simulation de poisson pour respecter l'aléa. et pour chaque instant $t$ considérer que les pluies qui sont déjà survenu.
+
+Pour un instant de $t$ donné, seuls les instants $[T_1,...,T_n]$ tel que $T_n\le t<T_{n+1}$ seront considéré, alors il y aura eu n pluies avant cette date.
+
+```{r}
+#| echo: true
+
+Hauteur <- function(t, p = params){
+  Ti <- Dates(t, p)
+  Ti <- Ti[ Ti <= t ]                       # <1>
+  Ii <- rintensite_Normal(length(Ti) )      # <2>
+  H <- sum(Ii*r(t - Ti))
+  return(H)
+}
+
+```
+
+1.  les pluies survenues après $t$ n'intervienent pas dans le calcul de la hauteur.
+
+2.  On simul les intensité pour chaque date de pluie
+
+
+
+nous allons visualiser l'évolution de la hauteur de l'eau sur 366 jours car 2024 est une année bixectille
+
+```{r}
+#| echo: true
+
+t = seq(from = 0, to = 1, length.out = 366 )
+
+
+# Dummy data
+data <- data.frame(
+  day = as.Date("2024-01-01") + 1:length(t),
+  value = sapply(t, FUN = Hauteur1)
+)
+
+# Most basic bubble plot
+p <- ggplot(data, aes(x=day, y=value)) +
+  geom_line(color="#69b3a2") +
+  geom_area(fill = "#69b3a2", alpha = 0.5)+
+  xlab("Date")+
+  ylab("niveau de l'eau") # +  theme_ipsum()
+
+```
+
+on approxime $0\le t \le 1$ par `x = seq(from = 0, to = 1, by = 0.001)`
+
+`ind.vector` renvoie un vecteur binaire \[0, 1\], les 1 corespondent à des scénarios d'inondation
+
+```{r}
+#| echo: true
+#| eval: false
+# à améliorer car la rapidité de petoile et de petoile.petite depend de lui
+
+ind.vector1 <- function(n.simul, p = params){
+   S <- rep(0, n.simul)
+  t = seq(from = 0, to = 1, by = 0.01)
+  for(i in 1:n.simul){
+    x = 0
+      if ( max(sapply(t, FUN = Hauteur) > p$h0) ){
+        x = 1
+      }
+    S[i] = x
+  }
+  return(S)
+}
+```
+
+```{r}
+ind.vector <- function(n.simul, p = params){
+   S <- rep(0, n.simul)
+  t = c(seq(from = 0.6 , to = 0.9, by = 0.03) )
+  for(i in 1:n.simul){
+    x = 0
+      if ( max(sapply(t, FUN = Hauteur) > p$h0) ){
+        x = 1
+      }
+    S[i] = x
+  }
+  return(S)
+}
+```
+
+```{r}
+#| echo: true
+#| eval: false
+ind.vector1 <- function(n.simul, p = params){
+  t <- seq(from = 0, to = 1, by = 0.01)
+  data <- rep(t, n.simul)
+  M <- matrix(sapply(data, FUN = Hauteur), ncol = n.simul)
+  S <- apply(M, 2, max) > p$h0
+  return(S)
+}
+```
+
+```{r}
+system.time(ind.vector(10^3))
+```
+
+### probabilité d'inondation
+
+on créé une liste de $H_{max}$ et on détermine la propention de de ses éléments qui sont supérieur à $h_0$
+
+```{r}
+#| echo: true
+petoile <- function(n.simul, p = params){
+  S <- ind.vector(n.simul)
+  probabilite = mean(S)
+  return(list("p" = probabilite, "demi.largeur" = qnorm(0.95) * sd(S)/sqrt(n.simul)))
+}
+```
+
+```{r}
+#| echo: true
+n.simul <- 10^3
+system.time(a <- petoile(n.simul))
+a
+```
+
+`prob` est la fonction qui renvoie l'évolution de l'estimation p en fonction du nombre de simulation
+
+```{r}
+#| echo: true
+prob <- function(n.simul, p = params){
+  S <- ind.vector(n.simul)
+  return(cumsum(S)/1:n.simul)
+}
+```
+
+
+```{r}
+#| echo: true
+n.simul = 10000
+df <- data.frame(a = 1:n.simul, b = prob(n.simul) )
+ggplot(df, aes(x = a, y = b))+
+  geom_line()
+```
+
+## Réduction de variance
+
+$$I = E(h(X)) = P(\mathbb{1}_{H_{max}>h_0})$$ on a besoin d'une fonction $l$ telle que $E(l(X))$ est facile à calculer Soit X la loi normal $\mathscr{N(h_0, \sigma)}$.
+
+On choisit $l(X) = 1_{X≥h_0}$ comme variable de contrôle.
+
+On sait calculer son espérance facilement : $$E(l(X)) = E(1_{\mathscr{N(h_0, \sigma)} ≥ h_0})= \frac{1}{2}$$
+
+On simule maintenant l'espérance de \$ E(h(X) − l(X))\$ par Monte-Carlo, pour obtenir une approximation de $E(h(X)) = E(h(X) − l(X)) + E(l(X))$.
+
+`(H.max(n.simul) >= seuil)  = ind.vector`\|
+
+```{r}
+#| echo: true
+petoile.petite <- function(n.simul, p = params){
+  seuil <- p$h0
+  x.norm <- rnorm(n.simul, mean = seuil, sd = 1)
+  S <- ind.vector(n.simul) - (x.norm >= seuil)
+  
+  probabilite = mean(S) + 1/2
+  return(list("p" = probabilite, "demi.largeur" = qnorm(0.95) * sd(S)/sqrt(n.simul)))
+}
+```
+
+```{r}
+#petoile.petite(1000)
+```
+
+```{r}
+#| echo: true
+seuil <- p$h0
+prob.petite <- function(n.simul, p = params){
+  seuil <- p$h0
+  x.norm <- rnorm(n.simul, mean = seuil, sd = 1)
+  S <- ind.vector(n.simul) - (x.norm > seuil)
+  
+  (cumsum(S)/(1:n.simul) + 1/2)
+}
+
+```
+
+```{r}
+#| echo: false
+
+n.simul = 1000
+plot( 1:n.simul, y = prob.petite(n.simul), t = 'l')
+
+lines( 1:n.simul, y = prob(n.simul), t = 'l')
+
+lines( 1:n.simul, y = prob(n.simul), t = 'l')
+
+```
+
+```{r}
+#| echo: false
+#| eval: false
+params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+p = params
+
+petoile.petite(n.simul)
+
+Tab <- data.frame( "h0" = , "petoile" = petoile(n.simul)$p, "petoile.petite" = petoile.petite(n.simul)$p) 
+```
+
+( en cours) **tableau de comparaison des probas de petoile et petoile.petite avec des valeurs de h0 de plus en plus garndes**
+
+## accélération du code avec C++
+
+
+```{r}
+
+library(Rcpp)
+
+```
+
+# Embedding Rcpp code in your R code
+
+You can also write Rcpp code in your R code in 3 ways using `sourceCpp()` `cppFunction()` `evalCpp()` respectively.
+
+### sourceCpp()
+
+Save Rcpp code as string object in R and compile it with `sourceCpp()`
+
+```{r}
+
+src <-
+
+"#include <Rcpp.h>
+
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+
+double rcpp_sum(NumericVector v){
+
+  double sum = 0;
+
+  for(int i=0; i<v.length(); ++i){
+
+    sum += v[i];
+
+  }
+
+  return(sum);
+
+}"
+
+
+
+sourceCpp(code = src)
+
+rcpp_sum(1:10)
+
+```
+
+### cppFunction()
+
+The `cppFunction()` offers a handy way to create a single Rcpp function. You can omit `#include <Rcpp.h>` and `using namespase Rcpp`; when you use `cppFunction()`.
+
+```{r}
+
+src <-
+
+  "double rcpp_sum(NumericVector v){
+
+    double sum = 0;
+
+    for(int i=0; i<v.length(); ++i){
+
+      sum += v[i];
+
+    }
+
+    return(sum);
+
+  }
+
+  "
+
+Rcpp::cppFunction(src)
+
+rcpp_sum(1:10)
+
+```
+
+### evalCpp()
+
+You can evaluate a single C++ statement by using `evalCpp()`.
+
+```{r}
+
+# Showing maximum value of double.
+
+evalCpp('std::numeric_limits<double>::max()')
+
+```
+
+The table below presents the correspondence of data types between R/Rcpp/C++.
+
+Fifi tu es où
+
+## Influence des paramètres {#section-2}
+
+::: {.panel-tabset .nav-pills}
+### lambda0🥶
+
+on calcule la moyenne du processus de poissons pour savoir il pleut environ combien de fois par an
+
+```{r}
+λ0 = 167.096
+somme <- 0
+params = list("lambda0" = λ0, "alpha" = α)
+for (j in 1:n.simul) {
+      somme = somme + length(Dates())
+}
+somme/n.simul
+```
+
+```{r}
+#| echo: true
+
+set.seed(1234)
+n.simul <- 10^3 # nombre de simulation de H_max nécessaire pour estimer la probabilité de pénurie
+
+n.simul <- 10^3
+vec_λ0 = seq(50, 250, 50)
+
+mean_λ0 <- function(){
+  result <- numeric(length(vec_λ0))
+  for(i in 1:length(vec_λ0)){
+    somme <- 0
+    param = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = vec_λ0[i], "alpha" = α)
+    for (j in 1:n.simul) {
+      somme <- somme + length(Dates(p=param))
+      }
+    result[i] <- somme/n.simul
+  }
+  return(result)
+  }
+
+data.frame( "lambda" = vec_λ0, "nombre moyen de pluie" = mean_λ0())
+```
+
+| Col1 | Col2 |
+|------|------|
+|      |      |
+|      |      |
+|      |      |
+|      |      |
+
+-   constat :
+
+le nombre moyen de pluie par an est proche de $\lambda_0$
+
+plus précisement, le nombre de pluie simulé par notre processus de poissons en 2024 est en moyenne $\lambda_0$ avec une fluctuation plus ou moins grande de $\alpha$
+
+-   nos attentes:
+
+```{mermaid}
+flowchart LR
+  A[lambda0 grand] --> B(plus de pluie)
+  B --> C{niveau de l'eau élevé}
+  C --> D[rique d'inondation augmente]
+```
+
+-   resulta :
+
+```{r}
+#| echo: true
+
+n.simul <- 10^3
+
+x0 <- 3 
+eta <- 2.5
+m <- 1.5
+v = 15
+h0 = 55
+
+α = 0.5
+prob_λ0 <- function(n.simul, p = params){
+   λ0 = seq(50, 250, 50)
+  result <- numeric(length(λ0))
+  for (i in 1:length(λ0)){
+    params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0[i], "alpha" = α, "v" = v, "h0" = h0)
+    p = params
+    S <- ind.vector(n.simul)
+    result[i] <- mean(S)
+  }
+  return(result)
+  }
+λ0 = seq(50, 250, 50)
+plot(λ0, prob_λ0(n.simul), type = 'l', col = 'red')
+```
+
+(suite)
+
+[remonter au menu](#section-2)
+### x0🥶
+
+```{r}
+#| echo: true
+params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+p = params
+x = seq(from = 0, to = 4*p$x0, by = 0.001)
+
+plot(x, f(x), type = 'l', col= 'blue', main = "f")
+abline(v=x0,col="red")
+text(x0, 0, expression(x0))
+
+```
+
+-   constat : La distribution $f$ des intensités est symétrique par rapport à $x_0$. $x_0$ est donc notre paramètre de position. On peut donc le considérer comme **l'intensité moyenne des pluies**.
+
+-   nos attentes :
+
+```{mermaid}
+%%| label: fig-mermaid
+%%| fig-width: 6
+%%| fig-cap: |
+%%|   How Quarto orchestrates rendering of documents: start with 
+%%|   a qmd file, use the Knitr or Jupyter engine to perform the 
+%%|   computations and convert it to an md file, then use Pandoc 
+%%|   to convert to various file formats including HTML, PDF, 
+%%|   and Word.
+flowchart LR
+  A[l'intensité des pluies augmente] --> B(le niveau de l'eau augmente)
+  A --> C(le risque augmente)
+ 
+```
+
+-   résultat :
+
+x0 augmente l'intensité des pluies et donc fait croître rapidement le niveau de l'eau.
+
+x0 **augmente** le risque d'inondation (futur graphe)
+
+(suite)
+[remonter au menu](#section-2)
+### v🙂
+
+```{r}
+v = 10
+p = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+v10 <- sapply(t, FUN = Hauteur)
+
+
+v = 20
+p = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+v20 <- sapply(t, FUN = Hauteur)
+
+v = 50
+p = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+v50 <- sapply(t, FUN = Hauteur)
+
+
+
+t = seq(from = 0, to = 1, length.out = 366 )
+data <- data.frame(
+  t = c(t, t, t),
+  v = c(rep("v = 10", 366), 
+        rep("v = 20", 366), 
+        rep("v = 50", 366)),
+  day = rep(as.Date("2024-01-01") + 1:366, 3),
+  value = c(v10, v20, v50)
+)
+
+p <- ggplot(data, aes(x=day, y=value, group=v, color=v)) +
+  geom_line() +
+  theme(
+    legend.position="none",
+    plot.title = element_text(size=14)) +
+    ggtitle("A spaghetti chart of baby names popularity") +
+  xlab("Date")+
+  ylab("niveau de l'eau")
+p
+
+```
+
+```{r}
+#| eval: false
+p + transition_reveal(day)
+```
+
+```{r}
+#| eval: false
+p + 
+  geom_point() +
+  transition_reveal(Day)
+```
+
+-   constat :
+
+plus la vitesse de réabsorption est elevée , plus la hauteur du fleuve est petite la hauteur du fleuve est inversement proportionnelle à la vitesse de réabsorption
+
+vitesse elevée -\> hauteur faible vitesse faible -\> hauteur elevée
+
+-   nos attentes :
+
+vue l'évolution du graphe, on s'attend à ce que le risque d'inondation augmente avec la dimunition de la vitesse de réabsorption.
+
+```{r}
+#| echo: true
+#| eval: false
+n.simul <- 1000
+prob_v <- function(n.simul, p = params){
+  v = seq(1, 50, 1)
+  result <- numeric(length(v))
+  for (i in 1:length(v)){
+    params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = alpha, "v" = v[i], "h0" = h0)
+    p = params
+    S <- ind.vector(n.simul)
+    result[i] <- sum(S)/n.simul
+  }
+  return(result)
+  }
+v = seq(1, 50, 1)
+plot(v, prob_v(n.simul), type = 'l', col = 'red')
+```
+
+-   resultat :
+
+v **diminue** donc le risque d'inondation
+
+[remonter au menu](#section-2)
+### α🥶
+
+```{r}
+t_sin = seq(from = 0, to = 1, by = 0.01)
+
+par(mfrow = c(1,2))
+
+alpha = 0.9
+plot(t_sin, λ0*(1 + alpha*sin(4*pi*t_sin)), t = 'l', col = 'red')
+
+
+alpha = 0.5
+lines(t_sin, λ0*(1 + alpha*sin(4*pi*t_sin)), t = 'l', col = 'green')
+
+
+alpha = 0.1
+lines(t_sin, λ0*(1 + alpha*sin(4*pi*t_sin)), t = 'l',col = 'blue')
+
+
+legend("topright", legend = c("α = 0.1", "α = 0.5", "α = 0.9"), col=c("blue", "green", "red"), lty=c(1, 1))
+
+
+abline(h = λ0, col = 'red')
+text(0, λ0, expression(λ0))
+
+α = 0.99
+
+params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+p = params
+
+t = seq(from = 0, to = 1, by = 0.01)
+plot(t, sapply(t, FUN = Hauteur), type = 'l', main = "la hauteur de l'eau du fleuve")
+```
+
+-   une correspondance entre la densité des pluies (période où il pleut beaucoup) et la hauteur de l'eau dans certaines périodes de l'année.
+
+-   à cause du $4\pi$ dans$\lambda(t)$ l'année 2024 a deux saisons pluvieuses comme vous pouvez le voir sur le graphe.
+
+-   le nombre de pluies fluctue autour de λ0.
+
+-   $\alpha$ fait fluctuer la densité des pluies. il pleut plus pendant certaines période de l'année à l'instar des saisons pluivieuse.
+
+-   plus $\alpha$ est grand, plus les saisons pluvieuses sont intenses.
+
+```{r}
+#| echo: true
+#| eval: false
+
+x0 <- 3 
+eta <- 2.5
+m <- 1.5
+n.simul <- 10^3 
+λ0 = 170
+v = 15
+h0 = 55
+
+#
+α = 0.99
+
+params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+p = params
+
+
+plot(t, sapply(t, FUN = Hauteur), type = 'l', col = 'red')
+
+#
+α = 0.5
+
+params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+p = params
+
+
+lines(t, sapply(t, FUN = Hauteur), type = 'l', col = 'green')
+
+#
+α = 0.01
+
+params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0)
+p = params
+
+
+lines(t, sapply(t, FUN = Hauteur), type = 'l', main = "influence du paramètre α \n sur le niveau de l'eau", col = 'blue')
+
+legend("topright", legend = c("α = 0.01", "α = 0.5", "α = 0.99"), col=c("blue", "green", "red"), lty=c(1, 1))
+
+```
+
+-   constat
+
+(suite) - nos attentes : (suite)
+
+```{r}
+#| echo: true
+#| eval: false
+n.simul <- 1000
+prob_alpha <- function(n.simul, p = params){
+  alpha = seq(0.1, 0.9, 0.1)
+  result <- numeric(length(alpha))
+  for (i in 1:length(alpha)){
+    params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = alpha[i], "v" = v, "h0" = h0)
+    p = params
+    S <- ind.vector(n.simul)
+    result[i] <- sum(S)/n.simul
+  }
+  return(result)
+  }
+alpha = seq(0.1, 0.9, 0.1)
+plot(alpha, prob_alpha(n.simul), type = 'l', col = 'red')
+
+```
+
+plus $\alpha$ est grand, plus les saisons pluvieuse sont plus longues.
+
+-   $\alpha$ **augmente** le risque d'inondation
+
+[remonter au menu](#section-2)
+### h0🙂
+
+c'est intuitif
+
+```{r}
+#| echo: true
+n.simul <- 100
+α = 0.5
+prob_h0 <- function(n.simul, p = params){
+  h0 = seq(30, 110, 20)
+  result <- numeric(length(h0))
+  for (i in 1:length(h0)){
+    params = list("m" = m, "x0" = x0, "eta" = eta, "lambda0" = λ0, "alpha" = α, "v" = v, "h0" = h0[i])
+    p = params
+    S <- ind.vector(n.simul)
+    result[i] <- mean(S)
+  }
+  return(result)
+  }
+h0 = seq(50, 90, 10)
+plot(h0, prob_h0(n.simul), type = 'l', col = 'red')
+```
+
+De façon globale,la probabilité d'inondation decroit avec la hauteur du fleuve cependant , on remarque certaines fluctuations
+
+-   TRIVIAL
+
+-   le risque **diminue** voyons ! c'est évident !
+
+-   ( on fera une courbe des proba en fonction de h0)
+
+-   j'ai envie de laisser cette phrase pour faire rigoler les profs 🤣🤣
+
+[remonter au menu](#section-2)
+:::
+
+## Fragments
+
+::: columns
+::: {.column width="50%"}
+[This shows up first,]{.fragment fragment-index="1" style="color:orange;"}
+:::
+
+::: {.column width="50%"}
+[then this,]{.fragment fragment-index="2" style="color: blue;"}
+:::
+:::
+
+[then this.]{.fragment fragment-index="3" style="color: pink;"}
+
+
+## Quelles sont les techniques de programmation qui vous semblent intéressantes dans votre code ?
+
+processus de poissons methode de rejet 2 reduction de variance
+
+## Quelle est la partie du code que vous avez codée en C/C++, et pourquoi ?
+
+`c_intensité` `c_Dates` `c_hauteur` `c_ind.vecteur`
+
+## Comment avez-vous vérifié la validité de votre code (tests avec certaines valeurs de paramètres, calculs intermédiaires, représentations graphiques, etc.) ?
+
+## Quelles études basées sur ce modèle vous paraîtraient pertinentes ? Quelles évolutions de ce modèle proposeriez-vous, afin de le rendre plus réaliste ?
+
+```{=html}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  <div class="col">
+    <div class="card">
+      <img src="car.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card">
+      <img src="car.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card">
+      <img src="car.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card">
+      <img src="car.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+  </div>
+</div> 
+```
