@@ -1,0 +1,58 @@
+h1, .h1, h2, .h2, h3, .h3 {
+    margin-top: 2em;
+}
+
+.output {
+  color: green;
+}
+/* 
+le selecteur body corespond au corps de texte
+*/
+
+body {
+  margin: 0; /* elle permet de s'assurer que nos éléments prennent bien 
+  toute la largeur de la page */
+}
+
+
+@media screen and (max-width: 768px) {
+  .container {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  }
+}
+
+h1 {
+  font-size: 7em;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bold;
+  font-style: normal;
+  text-shadow: 5px 5px 5px #6e86db;
+  text-align: center;
+  color:aliceblue;
+
+}
+
+
+h2 {
+  border-bottom: 0.2em solid green;
+}
+
+
+h3 {
+  border-bottom: 0.1em solid green;
+}
+
+
+p {
+  font-size: 1.1em;
+  font-family:'Times New Roman', Times, serif;
+
+}
+
+ul, ol{
+  font-size: 1em;
+}
+
+a{
+  text-decoration: none;
+}
